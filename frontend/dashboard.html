@@ -17,7 +17,7 @@
             <button id="btn-crear-usuario">Crear Usuario</button>
             <button id="btn-crear-torneo">Crear Torneo</button>
             <button id="btn-crear-partido">Crear Partido</button>
-        </div>
+        </div><br>
         <!-- Sección Torneos -->
         <div class="section" id="torneos-section">
             <h2>Torneos</h2>
@@ -43,7 +43,7 @@
                 </tbody>
             </table>
         </div>
-
+<br>
         <!-- Sección Partidos -->
         <div class="section" id="partidos-section">
             <h2>Partidos</h2>
@@ -80,7 +80,7 @@
                         <option value="arbitro">Árbitro</option>
                         <option value="organizacion">Organización</option>
                     </select>
-                        <input type="text" name="localidad" placeholder="Localidad" required>
+                    <input type="text" name="localidad" placeholder="Localidad" required>
                     <button type="submit">Crear Usuario</button>
                 </form>
             </div>
@@ -96,6 +96,10 @@
                     <input type="text" name="descripcion" placeholder="Descripción">
                     <input type="date" name="fecha_inicio" required>
                     <input type="date" name="fecha_fin" required>
+                    <label>Organización:</label>
+                    <select name="organizacion_id" required>
+                        <option value="">-- Seleccionar Organización --</option>
+                    </select>
                     <button type="submit">Crear Torneo</button>
                 </form>
             </div>

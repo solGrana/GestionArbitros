@@ -14,6 +14,7 @@ class TournamentCreate(TournamentBase):
 class TournamentResponse(TournamentBase):
     id: int
     activo: bool
+    organizacion_id: int
 
     class Config:
         orm_mode = True

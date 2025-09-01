@@ -42,7 +42,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"], # Cambiado a "*" para permitir todas las fuentes
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

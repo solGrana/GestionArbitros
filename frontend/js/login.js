@@ -4,7 +4,8 @@ loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
+    
+    console.log("entraste al Login");
     try {
         const res = await fetch("http://localhost:8000/auth/login", {
             method: "POST",
