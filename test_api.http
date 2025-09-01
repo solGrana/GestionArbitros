@@ -1,0 +1,35 @@
+### Probar API funcionando
+GET http://127.0.0.1:8000/
+
+### Crear un usuario ADMIN
+POST http://127.0.0.1:8000/usuarios/
+Content-Type: application/json
+
+{
+  "nombre": "Admin General",
+  "email": "admin@liga.com",
+  "password": "admin123",
+  "rol": "admin"
+}
+
+### Crear un usuario ÁRBITRO
+POST http://127.0.0.1:8000/usuarios/
+Content-Type: application/json
+
+{
+  "nombre": "Juan Pérez",
+  "email": "arbitro1@liga.com",
+  "password": "clave123",
+  "rol": "arbitro"
+}
+
+### Crear una ORGANIZACIÓN
+POST http://127.0.0.1:8000/usuarios/
+Content-Type: application/json
+
+{
+  "nombre": "GEBA",
+  "email": "contacto@geba.com",
+  "password": "geba123",
+  "rol": "organizacion"
+}

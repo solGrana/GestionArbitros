@@ -1,0 +1,137 @@
+<!-- frontend/dashboard.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gestión de Árbitros</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dashboard - Gestión de Árbitros</h1>
+
+        <div class="admin-actions">
+            <button id="btn-crear-usuario">Crear Usuario</button>
+            <button id="btn-crear-torneo">Crear Torneo</button>
+            <button id="btn-crear-partido">Crear Partido</button>
+        </div>
+        <!-- Sección Torneos -->
+        <div class="section" id="torneos-section">
+            <h2>Torneos</h2>
+            <div id="torneos-container">
+                <!-- Aquí se agregan los torneos dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Sección Usuarios -->
+        <div class="section" id="usuarios-section">
+            <h2>Usuarios</h2>
+            <table id="usuarios-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Usuarios dinámicos -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sección Partidos -->
+        <div class="section" id="partidos-section">
+            <h2>Partidos</h2>
+            <table id="partidos-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Torneo</th>
+                        <th>Fecha / Hora</th>
+                        <th>Cancha</th>
+                        <th>Arbitros</th>
+                        <th>Asistentes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Partidos dinámicos -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Botones de creación -->
+
+        <!-- Modal Usuario -->
+        <div class="modal" id="modal-usuario">
+            <div class="modal-content">
+                <span class="close" data-modal="modal-usuario">&times;</span>
+                <h3>Crear Usuario</h3>
+                <form id="form-usuario">
+                    <input type="text" name="nombre" placeholder="Nombre" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                    <select name="rol" required>
+                        <option value="">-- Seleccionar Rol --</option>
+                        <option value="arbitro">Árbitro</option>
+                        <option value="organizacion">Organización</option>
+                    </select>
+                        <input type="text" name="localidad" placeholder="Localidad" required>
+                    <button type="submit">Crear Usuario</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Torneo -->
+        <div class="modal" id="modal-torneo">
+            <div class="modal-content">
+                <span class="close" data-modal="modal-torneo">&times;</span>
+                <h3>Crear Torneo</h3>
+                <form id="form-torneo">
+                    <input type="text" name="nombre" placeholder="Nombre" required>
+                    <input type="text" name="descripcion" placeholder="Descripción">
+                    <input type="date" name="fecha_inicio" required>
+                    <input type="date" name="fecha_fin" required>
+                    <button type="submit">Crear Torneo</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Partido -->
+        <div class="modal" id="modal-partido">
+            <div class="modal-content">
+                <span class="close" data-modal="modal-partido">&times;</span>
+                <h3>Crear Partido</h3>
+                <form id="form-partido">
+                    <select name="torneo_id" required>
+                        <option value="">-- Seleccionar Torneo --</option>
+                    </select>
+                    <input type="datetime-local" name="fecha_hora" required>
+                    <input type="text" name="cancha" placeholder="Cancha" required>
+                    <label>Arbitro:</label>
+                    <select name="arbitro" required></select>
+                    <label>Asistentes:</label>
+                    <select name="asistentes" multiple></select>
+                    <input type="number" name="valor_arbitro" placeholder="Valor Árbitro" required>
+                    <input type="number" name="valor_asistente" placeholder="Valor Asistente" required>
+                    <select name="modalidad_pago" required>
+                        <option value="">-- Modalidad de Pago --</option>
+                        <option value="en_cancha">En Cancha</option>
+                        <option value="administrador">Administrador</option>
+                    </select>
+                    <button type="submit">Crear Partido</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/dashboard.js"></script>
+
+</body>
+
+</html>
