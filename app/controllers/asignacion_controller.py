@@ -22,3 +22,17 @@ def asignar(match_id: int, arbitro_ids: list[int], asistente_ids: list[int],
     asistentes = db.query(User).filter(User.id.in_(asistente_ids), User.rol == "arbitro").all()  # o "asistente" si los usuarios tienen ese rol
 
     return AsignacionService.asignar_usuarios(db, match, arbitros, asistentes)
+
+
+@router.get("/partido/{match_id}")
+def get_asignaciones(match_id: int, db: Session = Depends(get_db)):
+    from app.models.asignacion import Asignacion
+    asignaciones = db.query(Asignacion).filter(Asignacion.match_id == match_id).all()
+    return [
+        {
+            "rol": a.rol,
+            "user": {"id": a.user.id, "nombre": a.user.nombre}
+        } 
+        for a in asignaciones
+    ]
+

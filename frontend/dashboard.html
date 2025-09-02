@@ -64,7 +64,6 @@
             </table>
         </div>
 
-        <!-- Botones de creación -->
 
         <!-- Modal Usuario -->
         <div class="modal" id="modal-usuario">
@@ -118,9 +117,10 @@
                     <input type="text" name="cancha" placeholder="Cancha" required>
                     <label>Arbitro:</label>
                     <select name="arbitro" required></select>
-                    <label>Asistentes:</label>
-                    <select name="asistentes" multiple></select>
-                    <input type="number" name="valor_arbitro" placeholder="Valor Árbitro" required>
+                    <label for="asistentes">Asistentes:</label>
+                    <select id="asistentes" name="asistentes" multiple size="6"></select>
+                    
+                    <input type="number" name="valor_arbitro" placeholder="Valor Árbitro" required>                
                     <input type="number" name="valor_asistente" placeholder="Valor Asistente" required>
                     <select name="modalidad_pago" required>
                         <option value="">-- Modalidad de Pago --</option>

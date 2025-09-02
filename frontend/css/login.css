@@ -12,7 +12,7 @@ body {
     overflow: hidden;
 }
 
-/* Líneas de cancha estilizadas */
+/* Líneas de cancha  */
 body::before {
     content: "";
     position: absolute;
