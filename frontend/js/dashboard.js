@@ -44,6 +44,24 @@ const api = (() => {
 
 // Funciones utiles
 
+// Función para cambiar de sección
+function mostrarSeccion(seccionId) {
+  document.querySelectorAll('.section').forEach(sec => {
+      sec.style.display = 'none'; // Oculta todas las secciones
+  });
+  document.querySelectorAll('.sidebar-btn').forEach(btn => {
+      btn.classList.remove('active'); // Quita la clase activa de los botones
+  });
+
+  const section = document.getElementById(seccionId);
+  const button = document.querySelector(`.sidebar-btn[data-section="${seccionId}"]`);
+  if (section && button) {
+      section.style.display = 'block'; // Muestra solo la sección activa
+      button.classList.add('active');  // Marca el botón activo
+  }
+   console.log("función mostrarSeccion ejecutada");
+}
+
 function formatearFecha(fechaISO) {
     const fecha = new Date(fechaISO);
     const pad = n => String(n).padStart(2, '0');
@@ -248,7 +266,19 @@ async function crearPartido(form) {
 
 // events listeners
 
-document.addEventListener("DOMContentLoaded", renderDashboard);
+document.addEventListener('DOMContentLoaded', () => {
+  // Ocultar todas las secciones excepto la primera
+  document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+  // Listener de botones del sidebar
+  document.querySelectorAll('.sidebar-btn').forEach(btn => {
+      btn.addEventListener('click', () => mostrarSeccion(btn.dataset.section));
+  });
+  // Mostrar sección por defecto
+  mostrarSeccion('torneos-section');
+  renderDashboard();
+});
+
+/* document.addEventListener("DOMContentLoaded", renderDashboard); */
 
 document.getElementById("btn-crear-torneo").addEventListener("click", cargarOpcionesTorneo);
 document.getElementById("btn-crear-partido").addEventListener("click", cargarOpcionesPartido);
