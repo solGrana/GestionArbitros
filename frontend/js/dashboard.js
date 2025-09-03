@@ -110,21 +110,101 @@ async function renderTorneos(torneos, usuarios) {
 }
 
 async function renderPartidos(torneos) {
-    const tbody = document.querySelector("#partidos-table tbody");
-    tbody.innerHTML = "";
+  const container = document.getElementById("partidos-container");
+  container.innerHTML = "";
 
-    const usuarios = await api.getUsuarios();
+  const usuarios = await api.getUsuarios();
+  const partidosPorOrg = {};
 
-    for (const t of torneos) {
-        const partidos = await api.getPartidos(t.id);
-        for (const p of partidos) {
-            const asignaciones = await api.getAsignaciones(p.id);
-            const arbitros = asignaciones.filter(a => a.rol==="arbitro").map(a => a.user.nombre).join(", ") || "-";
-            const asistentes = asignaciones.filter(a => a.rol==="asistente").map(a => a.user.nombre).join(", ") || "-";
-            tbody.appendChild(crearFilaTabla([t.nombre, formatearFecha(p.fecha_hora), p.cancha, arbitros, asistentes]));
-        }
+  // Agrupar partidos por organizador
+  for (const t of torneos) {
+    const partidos = await api.getPartidos(t.id);
+    const organizador = buscarOrgPorId(t.organizacion_id, usuarios);
+
+    if (!partidosPorOrg[organizador]) {
+      partidosPorOrg[organizador] = { partidos: [], torneos: [] };
     }
+
+    partidosPorOrg[organizador].torneos.push(t); // guardo torneos de ese organizador
+
+    for (const p of partidos) {
+      const asignaciones = await api.getAsignaciones(p.id);
+      const arbitros = asignaciones.filter(a => a.rol==="arbitro").map(a => a.user.nombre).join(", ") || "-";
+      const asistentes = asignaciones.filter(a => a.rol==="asistente").map(a => a.user.nombre).join(", ") || "-";
+
+      partidosPorOrg[organizador].partidos.push({
+        torneo: t.nombre,
+        fecha: formatearFecha(p.fecha_hora),
+        cancha: p.cancha,
+        arbitros,
+        asistentes
+      });
+    }
+  }
+
+  // Renderizar una tabla por organizador
+  Object.entries(partidosPorOrg).forEach(([org, data]) => {
+    const { partidos, torneos } = data;
+
+    // Título del organizador
+    const title = document.createElement("h3");
+    title.textContent = `Organizador: ${org}`;
+    container.appendChild(title);
+
+    // Botón para cargar partido
+    const btn = document.createElement("button");
+    btn.textContent = "Cargar Partido";
+    btn.classList.add("btn-crear-partido");
+    btn.addEventListener("click", () => {
+      // Abre modal
+      toggleModal("modal-partido", true);
+
+      // Cargar torneos SOLO del organizador
+      const torneoSelect = document.querySelector("#form-partido select[name='torneo_id']");
+      limpiarSelect(torneoSelect, "-- Seleccionar Torneo --");
+      torneos.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t.id;
+        opt.textContent = t.nombre;
+        torneoSelect.appendChild(opt);
+      });
+
+      cargarOpcionesPartido(torneos); 
+    });
+    container.appendChild(btn);
+
+    // Tabla de partidos
+    const table = document.createElement("table");
+    table.classList.add("partidos-table");
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Torneo</th>
+          <th>Fecha / Hora</th>
+          <th>Cancha</th>
+          <th>Árbitros</th>
+          <th>Asistentes</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    `;
+
+    const tbody = table.querySelector("tbody");
+    partidos.forEach(p => {
+      tbody.appendChild(crearFilaTabla([
+        p.torneo,
+        p.fecha,
+        p.cancha,
+        p.arbitros,
+        p.asistentes
+      ]));
+    });
+
+    container.appendChild(table);
+    container.appendChild(document.createElement("br"));
+  });
 }
+
 
 async function renderUsuarios() {
     const tbody = document.querySelector("#usuarios-table tbody");
@@ -160,47 +240,55 @@ async function cargarOpcionesTorneo() {
     });
 }
 
-async function cargarOpcionesPartido() {
-    const torneos = await api.getTorneos();
-    const usuarios = await api.getUsuarios();
+async function cargarOpcionesPartido(torneosFiltrados = null) {
+  const torneoSelect = document.querySelector("#form-partido select[name='torneo_id']");
+  const arbitroSelect = document.querySelector("#form-partido select[name='arbitro']");
+  const asistentesSelect = document.querySelector("#form-partido select[name='asistentes']");
 
-    const torneoSelect = document.querySelector("#form-partido select[name='torneo_id']");
-    const arbitroSelect = document.querySelector("#form-partido select[name='arbitro']");
-    const asistentesSelect = document.querySelector("#form-partido select[name='asistentes']");
+  // Si no vienen torneos filtrados → pedir todos
+  let torneos = torneosFiltrados;
+  if (!torneos) {
+    torneos = await api.getTorneos();
+  }
 
-    limpiarSelect(torneoSelect, "-- Seleccionar Torneo --");
-    torneos.forEach(t => {
-        const opt = document.createElement("option");
-        opt.value = t.id;
-        opt.textContent = t.nombre;
-        torneoSelect.appendChild(opt);
-    });
+  // Cargar torneos
+  limpiarSelect(torneoSelect, "-- Seleccionar Torneo --");
+  torneos.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    opt.textContent = t.nombre;
+    torneoSelect.appendChild(opt);
+  });
 
-    limpiarSelect(arbitroSelect, "-- Seleccionar Árbitro --");
-    const arbitros = usuarios.filter(u => u.rol==="arbitro");
-    arbitros.forEach(a => {
-        const opt = document.createElement("option");
-        opt.value = a.id;
-        opt.textContent = a.nombre;
-        arbitroSelect.appendChild(opt);
-    });
+  // Cargar árbitros y asistentes
+  const usuarios = await api.getUsuarios();
 
-    // Select multiple de asistentes
-    asistentesSelect.innerHTML = "";
-    const asistentes = usuarios.filter(u => u.rol==="arbitro");
-    asistentes.forEach(a => {
-        const opt = document.createElement("option");
-        opt.value = a.id;
-        opt.textContent = a.nombre;
-        asistentesSelect.appendChild(opt);
-    });
+  limpiarSelect(arbitroSelect, "-- Seleccionar Árbitro --");
+  usuarios.filter(u => u.rol === "arbitro").forEach(a => {
+    const opt = document.createElement("option");
+    opt.value = a.id;
+    opt.textContent = a.nombre;
+    arbitroSelect.appendChild(opt);
+  });
 
-    // Hack para seleccionar sin Ctrl
-    asistentesSelect.addEventListener("mousedown", e => {
-        e.preventDefault();
-        if (e.target.tagName === "OPTION") e.target.selected = !e.target.selected;
-    });
+  // Select múltiple de asistentes
+  asistentesSelect.innerHTML = "";
+  usuarios.filter(u => u.rol === "arbitro").forEach(a => {
+    const opt = document.createElement("option");
+    opt.value = a.id;
+    opt.textContent = a.nombre;
+    asistentesSelect.appendChild(opt);
+  });
+
+  // Hack para seleccionar sin Ctrl
+  asistentesSelect.addEventListener("mousedown", e => {
+    e.preventDefault();
+    if (e.target.tagName === "OPTION") {
+      e.target.selected = !e.target.selected;
+    }
+  });
 }
+
 
 
 // Funciones para crear nuevos recursos
@@ -281,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* document.addEventListener("DOMContentLoaded", renderDashboard); */
 
 document.getElementById("btn-crear-torneo").addEventListener("click", cargarOpcionesTorneo);
-document.getElementById("btn-crear-partido").addEventListener("click", cargarOpcionesPartido);
+/* document.getElementById("btn-crear-partido").addEventListener("click", cargarOpcionesPartido); */
 
 document.getElementById("form-usuario").addEventListener("submit", e => { e.preventDefault(); crearUsuario(e.target); });
 document.getElementById("form-torneo").addEventListener("submit", e => { e.preventDefault(); crearTorneo(e.target); });
@@ -291,6 +379,6 @@ document.getElementById("form-partido").addEventListener("submit", e => { e.prev
 document.querySelectorAll(".admin-actions button").forEach(btn => {
     btn.addEventListener("click", () => toggleModal(btn.id.replace("btn-crear-", "modal-"), true));
 });
-document.querySelectorAll(".modal .close").forEach(span => {
+document.querySelectorAll(".modal .close").forEach(span => {   
     span.addEventListener("click", () => toggleModal(span.dataset.modal, false));
 });

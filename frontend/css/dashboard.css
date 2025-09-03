@@ -184,6 +184,10 @@ button:hover {
     background-color: var(--color-primary-dark);
     transform: translateY(-0.125rem);
 }
+.btn-crear-partido {
+  margin-top: 1rem;
+  margin-bottom: 1rem; 
+}
 
 /* Botones admin */
 .admin-actions button {
