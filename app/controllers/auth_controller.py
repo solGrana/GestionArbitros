@@ -8,6 +8,7 @@ from app.config import settings
 from app.services.auth_service import get_current_user
 from app.schemas.user import UserResponse
 from app.models.user import User
+from jose import jwt, JWTError
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -24,6 +25,31 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     access_token_expires = settings.ACCESS_TOKEN_EXPIRE_MINUTES
     token = create_access_token(data={"sub": str(user.id)}, expires_delta=access_token_expires)
     return {"access_token": token, "token_type": "bearer"}
+
+
+@router.post("/refresh")
+def refresh(refresh_token: str, db: Session = Depends(get_db)):
+    """
+    Endpoint para renovar el access_token usando el refresh_token.
+    """
+    try:
+        payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Refresh token inválido")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Refresh token inválido")
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Usuario no encontrado")
+
+    new_access_token = create_access_token(
+        data={"sub": str(user.id)},
+        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
+
+    return {"access_token": new_access_token, "token_type": "bearer"}
 
 
 @router.get("/me", response_model=UserResponse)

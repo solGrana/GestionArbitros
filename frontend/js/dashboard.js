@@ -50,7 +50,7 @@ function mostrarSeccion(seccionId) {
       sec.style.display = 'none'; // Oculta todas las secciones
   });
   document.querySelectorAll('.sidebar-btn').forEach(btn => {
-      btn.classList.remove('active'); // Quita la clase activa de los botones
+      btn.classList.remove('active'); 
   });
 
   const section = document.getElementById(seccionId);
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.sidebar-btn').forEach(btn => {
       btn.addEventListener('click', () => mostrarSeccion(btn.dataset.section));
   });
-  // Mostrar sección por defecto
+  // Mostrar sección por default
   mostrarSeccion('torneos-section');
   renderDashboard();
 });

@@ -13,7 +13,7 @@ from jose import jwt, JWTError
 from app.config import settings
 
 # Tiempo de expiración del token en minutos
-ACCESS_TOKEN_EXPIRE_MINUTES = 60000
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 def authenticate_user(db: Session, email: str, password: str) -> User | None:

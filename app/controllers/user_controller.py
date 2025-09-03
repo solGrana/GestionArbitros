@@ -28,13 +28,13 @@ def read_users_me(current_user: User = Depends(get_current_user)):
 
 
 @router.get("/admin-only", response_model=dict)
-def read_admin_data(current_user: User = Depends(admin_required)): #aca va admiun_required
+def read_admin_data(current_user: User = Depends(admin_required)): 
     """
     Endpoint de prueba para admin.
     """
     return {"msg": "Accediste como admin"}
 
 
-@router.get("/", response_model=list[UserResponse], dependencies=[Depends(admin_required)])  #aca va admiun_required
+@router.get("/", response_model=list[UserResponse], dependencies=[Depends(admin_required)])  
 def list_users(db: Session = Depends(get_db)):
     return UserService.list_users(db)
