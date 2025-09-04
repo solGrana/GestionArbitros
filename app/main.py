@@ -23,7 +23,7 @@ from app.controllers import tournament_controller, match_controller, asignacion_
 
 
 app = FastAPI(title="Gestión de Árbitros")
-Base.metadata.create_all(bind=engine)
+""" Base.metadata.create_all(bind=engine) """
 
 app.include_router(user_controller.router)
 app.include_router(auth_controller.router)

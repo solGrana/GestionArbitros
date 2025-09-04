@@ -137,7 +137,9 @@ async function renderPartidos(torneos) {
         fecha: formatearFecha(p.fecha_hora),
         cancha: p.cancha,
         arbitros,
-        asistentes
+        asistentes,
+        equipo_local: p.equipo_local,
+        equipo_visitante: p.equipo_visitante
       });
     }
   }
@@ -182,6 +184,8 @@ async function renderPartidos(torneos) {
           <th>Torneo</th>
           <th>Fecha / Hora</th>
           <th>Cancha</th>
+          <th>Local</th>
+          <th>Visitante</th>
           <th>Árbitros</th>
           <th>Asistentes</th>
         </tr>
@@ -189,16 +193,18 @@ async function renderPartidos(torneos) {
       <tbody></tbody>
     `;
 
-    const tbody = table.querySelector("tbody");
-    partidos.forEach(p => {
-      tbody.appendChild(crearFilaTabla([
-        p.torneo,
-        p.fecha,
-        p.cancha,
-        p.arbitros,
-        p.asistentes
-      ]));
-    });
+      const tbody = table.querySelector("tbody");
+      partidos.forEach(p => {
+          tbody.appendChild(crearFilaTabla([
+              p.torneo,
+              p.fecha,
+              p.cancha,
+              p.equipo_local,
+              p.equipo_visitante,
+              p.arbitros,
+              p.asistentes
+          ]));
+      });
 
     container.appendChild(table);
     container.appendChild(document.createElement("br"));
@@ -331,6 +337,8 @@ async function crearPartido(form) {
         torneo_id: parseInt(form.torneo_id.value),
         fecha_hora: form.fecha_hora.value + ":00",
         cancha: form.cancha.value,
+        equipo_local: form.equipo_local.value,
+        equipo_visitante: form.equipo_visitante.value,
         cantidad_arbitros: 1,
         cantidad_asistentes: asistentesIds.length,
         modalidad_pago: form.modalidad_pago.value,

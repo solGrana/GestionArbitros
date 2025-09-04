@@ -6,6 +6,8 @@ class MatchBase(BaseModel):
     torneo_id: int
     fecha_hora: datetime
     cancha: str
+    equipo_local: str
+    equipo_visitante: str
     cantidad_arbitros: int
     cantidad_asistentes: int
     modalidad_pago: str
