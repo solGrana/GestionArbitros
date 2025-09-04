@@ -1,4 +1,3 @@
-# models/tournament.py
 from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey
 from app.database import Base
 

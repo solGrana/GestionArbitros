@@ -1,4 +1,3 @@
-# app/schemas/match.py
 from pydantic import BaseModel
 from datetime import datetime
 

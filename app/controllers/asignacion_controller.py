@@ -19,7 +19,7 @@ def asignar(match_id: int, arbitro_ids: list[int], asistente_ids: list[int],
         raise HTTPException(status_code=404, detail="Partido no encontrado")
 
     arbitros = db.query(User).filter(User.id.in_(arbitro_ids), User.rol == "arbitro").all()
-    asistentes = db.query(User).filter(User.id.in_(asistente_ids), User.rol == "arbitro").all()  # o "asistente" si los usuarios tienen ese rol
+    asistentes = db.query(User).filter(User.id.in_(asistente_ids), User.rol == "arbitro").all()  
 
     return AsignacionService.asignar_usuarios(db, match, arbitros, asistentes)
 

@@ -25,7 +25,7 @@ class UserResponse(UserBase):
     id: int
 
     class Config:
-        orm_mode = True  # permite convertir desde SQLAlchemy
+        orm_mode = True  # para convertir desde SQLAlchemy
 
 # Para login
 class UserLogin(BaseModel):

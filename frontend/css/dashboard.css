@@ -1,6 +1,4 @@
-/* -------------------- */
-/* Variables globales */
-/* -------------------- */
+
 :root {
     --color-bg-dark: #0d1f16;
     --color-bg-darker: #1a472a;
@@ -15,9 +13,7 @@
     --color-shadow: rgba(0, 0, 0, 0.5);
 }
 
-/* -------------------- */
-/* Reset y tipografía */
-/* -------------------- */
+
 * {
     margin: 0;
     padding: 0;
@@ -25,7 +21,7 @@
 }
 
 html {
-    font-size: 16px; /* base 1rem = 16px */
+    font-size: 1rem; 
 }
 
 body {
@@ -37,7 +33,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Líneas de cancha estilizadas */
 body::before {
     content: "";
     position: absolute;
@@ -52,9 +47,6 @@ body::before {
     z-index: 0;
 }
 
-/* -------------------- */
-/* Header tipo estadio */
-/* -------------------- */
 header {
     background: linear-gradient(to bottom, var(--color-header-top), var(--color-header-bottom));
     padding: 1.5rem;
@@ -82,9 +74,7 @@ header::after {
     filter: blur(0.375rem);
 }
 
-/* -------------------- */
 /* Contenedor general */
-/* -------------------- */
 .container {
     max-width: 75rem;
     margin: 2rem auto;
@@ -93,9 +83,6 @@ header::after {
     z-index: 2;
 }
 
-/* -------------------- */
-/* Títulos */
-/* -------------------- */
 h1 {
     font-size: 3rem;
     font-weight: 700;
@@ -120,9 +107,7 @@ h1 {
     padding-bottom: 0.3rem;
 }
 
-/* -------------------- */
 /* Cards */
-/* -------------------- */
 .card {
     background-color: rgba(19, 44, 31, 0);
     border: 0.0625rem solid var(--color-white);
@@ -139,9 +124,7 @@ h1 {
     box-shadow: 0 0.5rem 1.5625rem rgba(0,0,0,0.6);
 }
 
-/* -------------------- */
 /* Tablas */
-/* -------------------- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -166,9 +149,7 @@ tr:hover {
     background-color: rgba(46, 204, 113, 0.15);
 }
 
-/* -------------------- */
 /* Botones */
-/* -------------------- */
 button {
     background-color: var(--color-primary);
     color: var(--color-white);
@@ -198,9 +179,7 @@ button:hover {
     background-color: var(--color-primary);
 }
 
-/* -------------------- */
 /* Modales */
-/* -------------------- */
 .modal {
     display: none;
     position: fixed;
@@ -313,17 +292,12 @@ button:hover {
 }
 
 
-/* -------------------- */
 /* Animaciones */
-/* -------------------- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(1.25rem); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* -------------------- */
-/* Responsivo */
-/* -------------------- */
 @media (max-width: 48rem) {
     .container {
         padding: 0 0.5rem;

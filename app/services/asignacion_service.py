@@ -7,11 +7,11 @@ class AsignacionService:
 
     @staticmethod
     def asignar_usuarios(db: Session, match: Match, arbitros: list[User], asistentes: list[User]):
-        # Eliminar asignaciones previas
+        # Eliminar asignaciones anteriores
         db.query(Asignacion).filter(Asignacion.match_id == match.id).delete()
         db.commit()
 
-        # Asignar árbitros
+        # Asignar arbitros
         for u in arbitros[:match.cantidad_arbitros]:
             asignacion = Asignacion(match_id=match.id, user_id=u.id, rol=RolAsignacion.ARBITRO.value)
             db.add(asignacion)

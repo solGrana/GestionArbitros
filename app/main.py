@@ -32,9 +32,9 @@ app.include_router(match_controller.router)
 app.include_router(asignacion_controller.router)
 
 origins = [
-    "http://localhost:5173",  # si usas Vite
+    "http://localhost:5173",  
     "http://127.0.0.1:5173",
-    "http://localhost",       # si probás con archivo local
+    "http://localhost",       
     "http://127.0.0.1",
     "http://127.0.0.1:5500",
     "http://localhost:5500"
@@ -42,7 +42,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Cambiado a "*" para permitir todas las fuentes
+    allow_origins=["*"], #  * para permitir todas las fuentes -- desps cambiarlo
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

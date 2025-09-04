@@ -1,4 +1,3 @@
-# app/services/tournament_service.py
 from sqlalchemy.orm import Session
 from app.repositories.tournament_repository import TournamentRepository
 from app.schemas.tournament import TournamentCreate

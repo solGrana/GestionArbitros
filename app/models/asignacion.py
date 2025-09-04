@@ -1,4 +1,4 @@
-# app/models/asignacion.py
+
 from sqlalchemy import Column, Integer, ForeignKey, String, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -14,7 +14,7 @@ class Asignacion(Base):
     __tablename__ = "asignaciones"
 
     id = Column(Integer, primary_key=True, index=True)
-    match_id = Column(Integer, ForeignKey("partidos.id"), nullable=False)  # <- ajustado
+    match_id = Column(Integer, ForeignKey("partidos.id"), nullable=False)  
     user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     rol = Column(String, nullable=False)
     confirmado = Column(Boolean, default=False)
