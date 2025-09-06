@@ -42,6 +42,11 @@ const api = (() => {
     };
 })();
 
+const filtrosUsuarios = {
+    rol: "",
+    localidad: "" 
+};
+
 // Funciones utiles
 
 // Función para cambiar de sección
@@ -212,11 +217,19 @@ async function renderPartidos(torneos) {
 }
 
 
-async function renderUsuarios() {
+async function renderUsuarios(filtros = {}) {
     const tbody = document.querySelector("#usuarios-table tbody");
     const usuarios = await api.getUsuarios();
     tbody.innerHTML = "";
-    for (const u of usuarios) {
+
+    const usuariosFiltrados = usuarios.filter(u => {
+        for (const key in filtros) {
+            if (filtros[key] && u[key] !== filtros[key]) return false;
+        }
+        return true;
+    });
+
+    for (const u of usuariosFiltrados) {
         tbody.appendChild(crearFilaTabla([u.nombre, u.email, u.rol]));
     }
 }
@@ -382,6 +395,12 @@ document.getElementById("btn-crear-torneo").addEventListener("click", cargarOpci
 document.getElementById("form-usuario").addEventListener("submit", e => { e.preventDefault(); crearUsuario(e.target); });
 document.getElementById("form-torneo").addEventListener("submit", e => { e.preventDefault(); crearTorneo(e.target); });
 document.getElementById("form-partido").addEventListener("submit", e => { e.preventDefault(); crearPartido(e.target); });
+
+// Listener para el filtro de rol
+document.getElementById("filtro-rol").addEventListener("change", (e) => {
+    filtrosUsuarios.rol = e.target.value;
+    renderUsuarios(filtrosUsuarios);
+});
 
 // Modales
 document.querySelectorAll(".admin-actions button").forEach(btn => {

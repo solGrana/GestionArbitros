@@ -291,6 +291,36 @@ button:hover {
   display: block;
 }
 
+/* Filtros de selección */
+
+#filtro-rol {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--select-size);
+  height: var(--select-size);
+  padding: 0;
+  margin-left: .5rem;
+  border-radius: .4rem;
+  border: 1px solid var(--color-primary);
+  background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><path fill="%23ffffff" d="M2 4l4 4 4-4z"/></svg>') no-repeat center;
+  cursor: pointer;
+  color: transparent;
+  text-indent: 9999px;
+  overflow: hidden;
+}
+
+#filtro-rol:focus {
+  outline: none;
+  border-color: var(--color-primary); 
+  background-color: var(--color-primary);
+}
+#filtro-rol option {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+#filtro-rol option:hover {
+  background-color: var(--color-primary-dark); 
+}
 
 /* Animaciones */
 @keyframes fadeIn {

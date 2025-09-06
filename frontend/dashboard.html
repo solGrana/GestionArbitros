@@ -36,17 +36,29 @@
                 <!-- Sección Usuarios -->
                 <div class="section" id="usuarios-section">
                     <h2>Usuarios</h2><br>
-
                     <div class="admin-actions">
                         <button id="btn-crear-usuario">Crear Usuario</button>
                     </div><br>
-
+                    
+<!--                     <label for="filtro-rol">Filtrar por rol:</label>
+                    <select id="filtro-rol">
+                        <option value="">Todos</option>
+                        <option value="organizacion">Organización</option>
+                        <option value="arbitro">Árbitro</option>
+                        <option value="admin">Administrador</option>
+                    </select> -->
                     <table id="usuarios-table">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
                                 <th>Email</th>
-                                <th>Rol</th>
+                                <th>Rol <label for="filtro-rol"></label> <select id="filtro-rol">
+                                        <option value="" disabled selected hidden></option>
+                                        <option value="">Todos</option>
+                                        <option value="organizacion">Organización</option>
+                                        <option value="arbitro">Árbitro</option>
+                                        <option value="admin">Administrador</option>
+                                    </select></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,14 +67,15 @@
                     </table>
                 </div>
                 <br>
-                
+
                 <!-- Sección Partidos -->
                 <div class="section" id="partidos-section">
                     <h2>Partidos</h2><br>
-<!--                     <div class="admin-actions">
+
+                    <!--                     <div class="admin-actions">
                         <button id="btn-crear-partido">Crear Partido</button>
                     </div><br> -->
-                
+
                     <div id="partidos-container">
                         <!-- Aca se renderizan las tablas dinámicas -->
                     </div>
@@ -122,7 +135,7 @@
 
                             <label>Equipo Local:</label>
                             <input type="text" name="equipo_local" required>
-                            
+
                             <label>Equipo Visitante:</label>
                             <input type="text" name="equipo_visitante" required>
 
