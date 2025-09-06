@@ -36,3 +36,17 @@ def get_asignaciones(match_id: int, db: Session = Depends(get_db)):
         for a in asignaciones
     ]
 
+@router.put("/{match_id}")
+def actualizar_asignaciones(match_id: int, arbitro_ids: list[int], asistente_ids: list[int],
+                            db: Session = Depends(get_db), current_user: User = Depends(admin_required)):
+
+    match = db.query(Match).filter(Match.id == match_id).first()
+    if not match:
+        raise HTTPException(status_code=404, detail="Partido no encontrado")
+
+    arbitros = db.query(User).filter(User.id.in_(arbitro_ids), User.rol == "arbitro").all()
+    asistentes = db.query(User).filter(User.id.in_(asistente_ids), User.rol == "arbitro").all()  
+
+    return AsignacionService.actualizar_usuarios(db, match, arbitros, asistentes)
+
+

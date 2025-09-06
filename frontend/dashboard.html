@@ -39,8 +39,8 @@
                     <div class="admin-actions">
                         <button id="btn-crear-usuario">Crear Usuario</button>
                     </div><br>
-                    
-<!--                     <label for="filtro-rol">Filtrar por rol:</label>
+
+                    <!--                     <label for="filtro-rol">Filtrar por rol:</label>
                     <select id="filtro-rol">
                         <option value="">Todos</option>
                         <option value="organizacion">Organización</option>
@@ -72,7 +72,7 @@
                 <div class="section" id="partidos-section">
                     <h2>Partidos</h2><br>
 
-                    <!--                     <div class="admin-actions">
+                    <!-- <div class="admin-actions">
                         <button id="btn-crear-partido">Crear Partido</button>
                     </div><br> -->
 
@@ -157,7 +157,22 @@
                     </div>
                 </div>
 
-            </div>
+                <div id="modal-asignar-arbitros" class="modal">
+                    <div class="modal-content">
+                        <span class="close" data-modal="modal-asignar-arbitros">&times;</span>
+                        <h2>Asignar Árbitros</h2>
+                        <form id="form-asignar-arbitros">
+                            <label>Árbitro principal:</label>
+                            <select name="arbitro" required></select>
+                
+                            <label>Asistentes:</label>
+                            <select name="asistentes" multiple></select>
+                
+                            <br><br>
+                            <button type="submit">Guardar</button>
+                        </form>
+                    </div>
+                </div>     </div>
         </main>
     </div>
 
