@@ -163,7 +163,7 @@ async function renderTorneos(torneos, usuarios) {
             <strong>${t.nombre}</strong> | Organizador: ${buscarOrgPorId(t.organizacion_id, usuarios)} 
             <br>${t.descripcion}
             <br>Inicio: ${formatearFechaSoloDia(t.fecha_inicio)} | Fin: ${formatearFechaSoloDia(t.fecha_fin)}
-        `;
+            `;
         container.appendChild(card);
     }
 }
@@ -288,7 +288,12 @@ async function renderUsuarios(filtros = {}) {
     });
 
     for (const u of usuariosFiltrados) {
-        tbody.appendChild(crearFilaTabla([u.nombre, u.email, u.rol]));
+        tbody.appendChild(crearFilaTabla([u.nombre, u.email, u.rol, `
+        <div class="td-acciones">
+        <button class="btn-edit" data-id="${u.id}">Editar</button>
+        <button class="btn-delete" data-id="${u.id}">Eliminar</button>
+        </div>
+        `]));
     }
 }
 
@@ -320,7 +325,7 @@ async function cargarOpcionesPartido(torneosFiltrados = null) {
     const arbitroSelect = document.querySelector("#form-partido select[name='arbitro']");
     const asistentesSelect = document.querySelector("#form-partido select[name='asistentes']");
 
-    // Si no vienen torneos filtrados → pedir todos
+    // Si no vienen torneos filtrados pedir todos
     let torneos = torneosFiltrados;
     if (!torneos) {
         torneos = await api.getTorneos();

@@ -171,21 +171,30 @@ button:hover {
 }
 
 .td-acciones {
+
   display: flex;
   gap: 0.5rem;      
-  justify-content: center; 
+  justify-content: flex-start; 
 }
 
 .btn-assign, .btn-delete, .btn-edit {
+  background-color: transparent;
+  border: 1px solid var(--color-primary-dark);
   font-size: 0.75rem;
   padding: 0.4rem 0.8rem;
   margin: 0;          
 }
+
+.btn-delete{
+  border: 1px solid #dd4c3b;
+}
+
 .btn-delete {
   background-color: #dd4c3b;
 }
 .btn-delete:hover {
   background-color: #c0392b;
+  border: 1px solid #dd4c3b;
 }
 /* Botones admin */
 .admin-actions button {
