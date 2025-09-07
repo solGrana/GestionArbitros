@@ -1,15 +1,8 @@
 const api = (() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        alert("No estás logueado");
-        window.location.href = "index.html";
-    }
-    
-    const headers = { "Authorization": `Bearer ${token}` };
-    
-    const fetchJSON = async (url) => {
+
+    const fetchJSON = async (url, options = {}) => {
         try {
-            const res = await fetch(url, { headers });
+            const res = await fetchWithAuth(url, options);
             if (!res.ok) throw new Error(`Error ${res.status}`);
             return await res.json();
         } catch (err) {
@@ -19,47 +12,29 @@ const api = (() => {
     };
     
     const postJSON = async (url, data) => {
-        try {
-            const res = await fetch(url, {
-                method: "POST",
-                headers: { ...headers, "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-            if (!res.ok) throw await res.json();
-            return await res.json();
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
-    };
-
-    const putJSON = async (url, data) => {
-    try {
-        const res = await fetch(url, {
-            method: "PUT",
-            headers: { ...headers, "Content-Type": "application/json" },
+        const res = await fetchWithAuth(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
         if (!res.ok) throw await res.json();
-        return await res.json();
-    } catch (err) {
-        console.error(err);
-            throw err;
-        }
+        return res.json();
+    };
+
+    const putJSON = async (url, data) => {
+        const res = await fetchWithAuth(url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw await res.json();
+        return res.json();
     };
 
     const deleteJSON = async (url) => {
-        try {
-            const res = await fetch(url, {
-                method: "DELETE",
-                headers
-            });
-            if (!res.ok) throw await res.json();
-            return await res.json();
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const res = await fetchWithAuth(url, { method: "DELETE" });
+        if (!res.ok) throw await res.json();
+        return res.json();
     };
 
     return {
@@ -78,7 +53,30 @@ const filtrosUsuarios = {
     localidad: ""
 };
 
+const tokenManager = {
+    get access() {
+        return localStorage.getItem("token");
+    },
+    set access(token) {
+        localStorage.setItem("token", token);
+    },
+    get refresh() {
+        return localStorage.getItem("refresh_token");
+    },
+    set refresh(token) {
+        localStorage.setItem("refresh_token", token);
+    },
+    clear() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
+    }
+};
+
 // Funciones utiles
+
+function forceLogin() {
+    window.location.href = "login.html";
+}
 
 async function cargarArbitros(select) {
     limpiarSelect(select, "-- Seleccionar Árbitro --");
@@ -491,6 +489,54 @@ function asignarArbitros() {
         };
     });
 }
+
+// Manejo de tokens y fetch con autenticación
+async function refreshToken() {
+    if (!tokenManager.refresh) {
+        forceLogin();
+        return null;
+    }
+
+    try {
+        const res = await fetch("http://localhost:8000/auth/refresh", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh_token: tokenManager.refresh })
+        });
+
+        if (!res.ok) throw new Error("No se pudo refrescar token");
+        const data = await res.json();
+        tokenManager.access = data.access_token;
+        return data.access_token;
+    } catch (err) {
+        console.error("Error al refrescar:", err);
+        tokenManager.clear();
+        forceLogin();
+        return null;
+    }
+}
+async function fetchWithAuth(url, options = {}) {
+    let token = tokenManager.access;
+
+    options.headers = {
+        ...options.headers,
+        "Authorization": `Bearer ${token}`
+    };
+
+    let res = await fetch(url, options);
+
+    if (res.status === 401) {
+        console.warn("Token expirado, intentando refrescar...");
+        const newToken = await refreshToken();
+        if (!newToken) return res; 
+
+        options.headers["Authorization"] = `Bearer ${newToken}`;
+        res = await fetch(url, options);
+    }
+
+    return res;
+}
+
 
 //Eliminaciones
 

@@ -3,7 +3,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from app.database import get_db
-from app.services.auth_service import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from app.services.auth_service import authenticate_user
+from app.core.security import create_refresh_token, create_access_token
 from app.config import settings
 from app.services.auth_service import get_current_user
 from app.schemas.user import UserResponse
@@ -24,7 +25,20 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     
     access_token_expires = settings.ACCESS_TOKEN_EXPIRE_MINUTES
     token = create_access_token(data={"sub": str(user.id)}, expires_delta=access_token_expires)
-    return {"access_token": token, "token_type": "bearer"}
+
+    access_token = create_access_token(
+        data={"sub": str(user.id)},
+        expires_delta=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+    refresh_token = create_refresh_token(
+        data={"sub": str(user.id)},
+        expires_delta= settings.REFRESH_TOKEN_EXPIRE_DAYS
+    )   
+    return {
+            "access_token": access_token, 
+            "refresh_token": refresh_token,
+            "token_type": "bearer"
+            }
 
 
 @router.post("/refresh")

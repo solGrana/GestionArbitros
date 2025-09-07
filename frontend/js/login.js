@@ -15,7 +15,10 @@ loginForm.addEventListener("submit", async (e) => {
 
         if (!res.ok) throw new Error("Login fallido");
         const data = await res.json();
+
+        // Guardar tokens en localStorage
         localStorage.setItem("token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
 
         // Redirigir al dashboard
         window.location.href = "dashboard.html";
