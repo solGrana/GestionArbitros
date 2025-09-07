@@ -29,4 +29,11 @@ def get_match(match_id: int, db: Session = Depends(get_db)):
 def list_all_matches(db: Session = Depends(get_db)):
     return MatchService.list_all_matches(db)
 
+@router.delete("/{match_id}", dependencies=[Depends(admin_required)])
+def delete_match(match_id: int, db: Session = Depends(get_db)):
+    try:
+        MatchService.delete_match(db, match_id)
+        return {"detail": "Partido eliminado correctamente"}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 

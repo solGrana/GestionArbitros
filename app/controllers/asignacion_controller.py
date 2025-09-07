@@ -47,6 +47,6 @@ def actualizar_asignaciones(match_id: int, arbitro_ids: list[int], asistente_ids
     arbitros = db.query(User).filter(User.id.in_(arbitro_ids), User.rol == "arbitro").all()
     asistentes = db.query(User).filter(User.id.in_(asistente_ids), User.rol == "arbitro").all()  
 
-    return AsignacionService.actualizar_usuarios(db, match, arbitros, asistentes)
+    return AsignacionService.actualizar_usuarios(db, match, arbitros, asistentes) 
 
 

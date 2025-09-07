@@ -44,18 +44,32 @@ const api = (() => {
         return await res.json();
     } catch (err) {
         console.error(err);
-        throw err;
-    }
-};
+            throw err;
+        }
+    };
 
-    
+    const deleteJSON = async (url) => {
+        try {
+            const res = await fetch(url, {
+                method: "DELETE",
+                headers
+            });
+            if (!res.ok) throw await res.json();
+            return await res.json();
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    };
+
     return {
         getTorneos: () => fetchJSON("http://localhost:8000/torneos/"),
         getUsuarios: () => fetchJSON("http://localhost:8000/usuarios/"),
         getPartidos: (torneo_id) => fetchJSON(`http://localhost:8000/partidos/torneo/${torneo_id}`),
         getAsignaciones: (partido_id) => fetchJSON(`http://localhost:8000/asignaciones/partido/${partido_id}`),
         post: postJSON,
-        put: putJSON
+        put: putJSON,
+        delete: deleteJSON
     };
 })();
 
@@ -211,6 +225,7 @@ async function renderPartidos(torneos) {
         // Título del organizador
         const title = document.createElement("h3");
         title.textContent = `Organizador: ${org}`;
+        title.classList.add("organizador-title");
         container.appendChild(title);
 
         // Botón para cargar partido
@@ -262,8 +277,8 @@ async function renderPartidos(torneos) {
                 `
   <div class="td-acciones">
     <button class="btn-assign" data-id="${p.id}">Asignar</button>
-    <button class="btn-edit" data-id="${p.id}">Editar</button>
-    <button class="btn-delete" data-id="${p.id}">Eliminar</button>
+    <button class="btn-edit" id="edit-partido" data-id="${p.id}">Editar</button>
+    <button class="btn-delete" id="delete-partido" data-id="${p.id}">Eliminar</button>
   </div>
 `
             ]));
@@ -290,8 +305,8 @@ async function renderUsuarios(filtros = {}) {
     for (const u of usuariosFiltrados) {
         tbody.appendChild(crearFilaTabla([u.nombre, u.email, u.rol, `
         <div class="td-acciones">
-        <button class="btn-edit" data-id="${u.id}">Editar</button>
-        <button class="btn-delete" data-id="${u.id}">Eliminar</button>
+        <button class="btn-edit" id="edit-user" data-id="${u.id}">Editar</button>
+        <button class="btn-delete" id="delete-user" data-id="${u.id}">Eliminar</button>
         </div>
         `]));
     }
@@ -477,7 +492,28 @@ function asignarArbitros() {
     });
 }
 
+//Eliminaciones
 
+function eliminarPartidos() {
+    document.addEventListener("click", async (e) => {
+        if (e.target.id !== "delete-partido") return;
+
+        const partidoId = e.target.dataset.id;
+        if (!partidoId) return alert("No se encontró el partido.");
+
+        const confirmar = confirm("¿Estás seguro que deseas eliminar este partido?");
+        if (!confirmar) return;
+
+        try {
+            await api.delete(`http://localhost:8000/partidos/${partidoId}`);
+            alert("Partido eliminado correctamente");
+            renderDashboard(); // recarga la tabla
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo eliminar el partido: " + (err?.detail || err.message));
+        }
+    });
+}
 
 // events listeners
 
@@ -494,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar asignación de árbitros
     asignarArbitros();
+    eliminarPartidos();
 });
 
 /* document.addEventListener("DOMContentLoaded", renderDashboard); */

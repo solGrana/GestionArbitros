@@ -107,6 +107,24 @@ h1 {
     padding-bottom: 0.3rem;
 }
 
+.organizador-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-white);;        /* verde oscuro tipo cancha */
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-family: 'Arial', sans-serif;
+}
+
+.organizador-title::after {
+    content: "";
+    display: block;
+    width: 4rem;
+    height: 3px;
+    background-color: var(--color-primary-dark); 
+    margin-top: 5px;
+    border-radius: 5px;
+}
 /* Cards */
 .card {
     background-color: rgba(19, 44, 31, 0);

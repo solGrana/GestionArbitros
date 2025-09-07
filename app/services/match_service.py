@@ -21,3 +21,10 @@ class MatchService:
     @staticmethod
     def list_all_matches(db: Session):
         return MatchRepository.get_all_matches(db)
+    
+    @staticmethod
+    def delete_match(db: Session, match_id: int):
+        match = MatchRepository.get_match_by_id(db, match_id)
+        if not match:
+            raise ValueError("Partido no encontrado")
+        MatchRepository.delete_match(db, match)

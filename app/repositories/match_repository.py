@@ -22,3 +22,8 @@ class MatchRepository:
     @staticmethod
     def get_all_matches(db: Session):
         return db.query(Match).all()
+    
+    @staticmethod
+    def delete_match(db: Session, match: Match):
+        db.delete(match)
+        db.commit() 
