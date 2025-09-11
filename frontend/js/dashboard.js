@@ -75,7 +75,7 @@ const tokenManager = {
 // Funciones utiles
 
 function forceLogin() {
-    window.location.href = "login.html";
+    window.location.href = "/frontend/index.html";
 }
 
 async function cargarArbitros(select) {
@@ -492,6 +492,7 @@ function asignarArbitros() {
 
 // Manejo de tokens y fetch con autenticación
 async function refreshToken() {
+    console.log("refreshToken llamado");
     if (!tokenManager.refresh) {
         forceLogin();
         return null;
@@ -505,6 +506,7 @@ async function refreshToken() {
         });
 
         if (!res.ok) throw new Error("No se pudo refrescar token");
+
         const data = await res.json();
         tokenManager.access = data.access_token;
         return data.access_token;
@@ -515,6 +517,7 @@ async function refreshToken() {
         return null;
     }
 }
+
 async function fetchWithAuth(url, options = {}) {
     let token = tokenManager.access;
 

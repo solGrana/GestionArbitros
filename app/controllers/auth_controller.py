@@ -10,6 +10,7 @@ from app.services.auth_service import get_current_user
 from app.schemas.user import UserResponse
 from app.models.user import User
 from jose import jwt, JWTError
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -23,8 +24,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     if not user:
         raise HTTPException(status_code=401, detail="Usuario o contraseña incorrectos")
     
-    access_token_expires = settings.ACCESS_TOKEN_EXPIRE_MINUTES
-    token = create_access_token(data={"sub": str(user.id)}, expires_delta=access_token_expires)
+    """ access_token_expires = settings.ACCESS_TOKEN_EXPIRE_MINUTES """
+    """ access_token = create_access_token(data={"sub": str(user.id)}, expires_delta=access_token_expires) """
 
     access_token = create_access_token(
         data={"sub": str(user.id)},
@@ -41,11 +42,11 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
             }
 
 
-@router.post("/refresh")
-def refresh(refresh_token: str, db: Session = Depends(get_db)):
-    """
+""" @router.post("/refresh")
+def refresh(refresh_token: str = Form(...), db: Session = Depends(get_db)):
+   
     Endpoint para renovar el access_token usando el refresh_token.
-    """
+ 
     try:
         payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user_id: str = payload.get("sub")
@@ -64,7 +65,7 @@ def refresh(refresh_token: str, db: Session = Depends(get_db)):
     )
 
     return {"access_token": new_access_token, "token_type": "bearer"}
-
+ """
 
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
@@ -73,3 +74,31 @@ def get_me(current_user: User = Depends(get_current_user)):
     Requiere token en header Authorization: Bearer <token>
     """
     return current_user
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+
+@router.post("/refresh")
+def refresh(request: RefreshRequest, db: Session = Depends(get_db)):
+    """
+    Endpoint para renovar el access_token usando el refresh_token.
+    """
+    try:
+        payload = jwt.decode(request.refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Refresh token inválido")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Refresh token inválido")
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Usuario no encontrado")
+
+    new_access_token = create_access_token(
+        data={"sub": str(user.id)},
+        expires_delta= settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+
+    return {"access_token": new_access_token, "token_type": "bearer"}
